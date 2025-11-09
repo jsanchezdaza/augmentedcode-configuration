@@ -162,6 +162,10 @@ function Login() {
             </a>
           </div>
         </div>
+
+        <footer className="mt-8 text-center text-sm text-gray-500">
+          © {new Date().getFullYear()} Tabily. All rights reserved.
+        </footer>
       </div>
     </div>
   )
