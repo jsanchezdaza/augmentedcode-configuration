@@ -27,8 +27,12 @@ test.describe('Sign Up Page', () => {
 
     await page.fill('input[name="fullName"]', 'John Doe')
     await page.fill('input[name="email"]', 'invalid-email')
-    await page.fill('input[name="password"]', 'password123')
-    await page.fill('input[name="confirmPassword"]', 'password123')
+    await page.fill('input[name="password"]', 'password123456')
+    await page.fill('input[name="confirmPassword"]', 'password123456')
+
+    await page.evaluate(() => {
+      document.querySelector('form')?.setAttribute('novalidate', 'true')
+    })
 
     await page.click('button[type="submit"]')
 
@@ -40,8 +44,8 @@ test.describe('Sign Up Page', () => {
 
     await page.fill('input[name="fullName"]', 'John Doe')
     await page.fill('input[name="email"]', 'john@example.com')
-    await page.fill('input[name="password"]', 'password123')
-    await page.fill('input[name="confirmPassword"]', 'different123')
+    await page.fill('input[name="password"]', 'password123456')
+    await page.fill('input[name="confirmPassword"]', 'different123456')
 
     await page.click('button[type="submit"]')
 
@@ -58,7 +62,7 @@ test.describe('Sign Up Page', () => {
 
     await page.click('button[type="submit"]')
 
-    await expect(page.locator('text=Password must be at least 6 characters')).toBeVisible()
+    await expect(page.locator('text=Password must be at least 12 characters')).toBeVisible()
   })
 
   test('should successfully sign up and show verification message', async ({ page }) => {
@@ -109,8 +113,8 @@ test.describe('Sign Up Page', () => {
 
     await page.fill('input[name="fullName"]', 'Test User')
     await page.fill('input[name="email"]', 'test@example.com')
-    await page.fill('input[name="password"]', 'password123')
-    await page.fill('input[name="confirmPassword"]', 'password123')
+    await page.fill('input[name="password"]', 'password123456')
+    await page.fill('input[name="confirmPassword"]', 'password123456')
 
     const submitButton = page.locator('button[type="submit"]')
     await submitButton.click()

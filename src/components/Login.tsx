@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import Header from './Header'
 import Footer from './Footer'
 import { MIN_PASSWORD_LENGTH, VALIDATION_MESSAGES } from '../constants/validation'
+import { validateEmail } from '../utils/validation'
 
 interface FormErrors {
   email?: string
@@ -24,6 +25,8 @@ function Login() {
 
     if (!email) {
       newErrors.email = VALIDATION_MESSAGES.EMAIL_REQUIRED
+    } else if (!validateEmail(email)) {
+      newErrors.email = VALIDATION_MESSAGES.EMAIL_INVALID
     }
 
     if (!password) {

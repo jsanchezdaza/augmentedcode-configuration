@@ -99,6 +99,12 @@ function SignUp() {
                 >
                   Back to Sign In
                 </Link>
+                <button
+                  onClick={() => setSuccess(false)}
+                  className="mt-4 w-full text-sm text-gray-600 hover:text-gray-800 transition"
+                >
+                  Use a different email address?
+                </button>
               </div>
             </div>
 
@@ -150,7 +156,7 @@ function SignUp() {
                 <input
                   id="email"
                   name="email"
-                  type="text"
+                  type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-300 focus:border-transparent outline-none transition"
