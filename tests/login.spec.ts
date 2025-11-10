@@ -32,7 +32,7 @@ test.describe('Login Page', () => {
     await page.getByLabel(/email/i).fill('user@example.com')
     await page.getByLabel(/password/i).fill('123')
     await page.getByRole('button', { name: /sign in/i }).click()
-    await expect(page.getByText(/password must be at least 6 characters/i)).toBeVisible()
+    await expect(page.getByText(/password must be at least 12 characters/i)).toBeVisible()
   })
 
   test('displays sign up link', async ({ page }) => {

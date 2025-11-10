@@ -1,6 +1,10 @@
 import { useState, FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import Header from './Header'
+import Footer from './Footer'
+import { MIN_PASSWORD_LENGTH, VALIDATION_MESSAGES } from '../constants/validation'
+import { validateEmail } from '../utils/validation'
 
 interface FormErrors {
   email?: string
@@ -19,36 +23,50 @@ function Login() {
     e.preventDefault()
     const newErrors: FormErrors = {}
 
-    if (!email) {
-      newErrors.email = 'Email is required'
+    const trimmedEmail = email.trim()
+
+    if (!trimmedEmail) {
+      newErrors.email = VALIDATION_MESSAGES.EMAIL_REQUIRED
+    } else if (!validateEmail(trimmedEmail)) {
+      newErrors.email = VALIDATION_MESSAGES.EMAIL_INVALID
     }
 
     if (!password) {
-      newErrors.password = 'Password is required'
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+      newErrors.password = VALIDATION_MESSAGES.PASSWORD_REQUIRED
+    } else if (password.length < MIN_PASSWORD_LENGTH) {
+      newErrors.password = VALIDATION_MESSAGES.PASSWORD_TOO_SHORT
     }
 
     setErrors(newErrors)
 
     if (Object.keys(newErrors).length === 0) {
-      setIsLoading(true)
-      const { error } = await signInWithEmail(email, password)
-      setIsLoading(false)
+      try {
+        setIsLoading(true)
+        const { error } = await signInWithEmail(trimmedEmail, password)
 
-      if (error) {
-        setErrors({ auth: error.message })
+        if (error) {
+          setErrors({ auth: error.message })
+        }
+      } catch {
+        setErrors({ auth: 'An unexpected error occurred. Please try again.' })
+      } finally {
+        setIsLoading(false)
       }
     }
   }
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true)
-    const { error } = await signInWithGoogle()
-    setIsLoading(false)
+    try {
+      setIsLoading(true)
+      const { error } = await signInWithGoogle()
 
-    if (error) {
-      setErrors({ auth: error.message })
+      if (error) {
+        setErrors({ auth: error.message })
+      }
+    } catch {
+      setErrors({ auth: 'An unexpected error occurred. Please try again.' })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -148,15 +166,13 @@ function Login() {
 
             <div className="mt-6 text-center text-sm text-gray-600">
               Don't have an account?{' '}
-              <a href="/signup" className="text-emerald-600 font-medium hover:text-emerald-700">
+              <Link to="/signup" className="text-emerald-600 font-medium hover:text-emerald-700">
                 Sign Up
-              </a>
+              </Link>
             </div>
           </div>
 
-          <footer className="mt-8 text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} tabily. All rights reserved.
-          </footer>
+          <Footer />
         </div>
       </div>
     </>
