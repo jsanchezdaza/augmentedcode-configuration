@@ -5,54 +5,19 @@ import SignUp from './components/SignUp'
 import Home from './components/Home'
 import LoadingSpinner from './components/LoadingSpinner'
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
-
-  if (loading) {
-    return <LoadingSpinner />
-  }
-
-  return user ? <>{children}</> : <Navigate to="/" replace />
-}
-
-function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
-
-  if (loading) {
-    return <LoadingSpinner />
-  }
-
-  return !user ? <>{children}</> : <Navigate to="/home" replace />
-}
-
 function App() {
+  const { user, loading } = useAuth()
+
+  if (loading) {
+    return <LoadingSpinner />
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <PublicRoute>
-              <SignUp />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/" element={user ? <Navigate to="/home" replace /> : <Login />} />
+        <Route path="/signup" element={user ? <Navigate to="/home" replace /> : <SignUp />} />
+        <Route path="/home" element={!user ? <Navigate to="/" replace /> : <Home />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

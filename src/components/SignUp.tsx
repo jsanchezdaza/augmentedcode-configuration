@@ -22,6 +22,7 @@ function SignUp() {
   const [errors, setErrors] = useState<FormErrors>({})
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [submittedEmail, setSubmittedEmail] = useState('')
   const { signUpWithEmail } = useAuth()
 
   const handleSubmit = async (e: FormEvent) => {
@@ -63,6 +64,7 @@ function SignUp() {
         if (error) {
           setErrors({ auth: error.message })
         } else {
+          setSubmittedEmail(trimmedEmail)
           setSuccess(true)
         }
       } catch {
@@ -98,8 +100,8 @@ function SignUp() {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h2>
                 <p className="text-gray-600 mb-6">
-                  We've sent a verification link to <strong>{email}</strong>. Please check your
-                  inbox and click the link to verify your account.
+                  We've sent a verification link to <strong>{submittedEmail}</strong>. Please check
+                  your inbox and click the link to verify your account.
                 </p>
                 <Link
                   to="/"
@@ -108,7 +110,10 @@ function SignUp() {
                   Back to Sign In
                 </Link>
                 <button
-                  onClick={() => setSuccess(false)}
+                  onClick={() => {
+                    setSuccess(false)
+                    setErrors({})
+                  }}
                   className="mt-4 w-full text-sm text-gray-600 hover:text-gray-800 transition"
                 >
                   Use a different email address?
