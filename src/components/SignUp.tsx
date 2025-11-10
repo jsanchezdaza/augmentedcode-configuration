@@ -1,0 +1,229 @@
+import { useState, FormEvent } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
+import Header from './Header'
+
+interface FormErrors {
+  fullName?: string
+  email?: string
+  password?: string
+  confirmPassword?: string
+  auth?: string
+}
+
+function SignUp() {
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const { signUpWithEmail } = useAuth()
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    const newErrors: FormErrors = {}
+
+    if (!fullName.trim()) {
+      newErrors.fullName = 'Name is required'
+    }
+
+    if (!email) {
+      newErrors.email = 'Email is required'
+    } else if (!validateEmail(email)) {
+      newErrors.email = 'Invalid email address'
+    }
+
+    if (!password) {
+      newErrors.password = 'Password is required'
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters'
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password'
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match'
+    }
+
+    setErrors(newErrors)
+
+    if (Object.keys(newErrors).length === 0) {
+      setIsLoading(true)
+      const { error } = await signUpWithEmail(email, password, fullName)
+      setIsLoading(false)
+
+      if (error) {
+        setErrors({ auth: error.message })
+      } else {
+        setSuccess(true)
+      }
+    }
+  }
+
+  if (success) {
+    return (
+      <>
+        <Header />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              <div className="text-center">
+                <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100 mb-4">
+                  <svg
+                    className="h-6 w-6 text-emerald-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h2>
+                <p className="text-gray-600 mb-6">
+                  We've sent a verification link to <strong>{email}</strong>. Please check your
+                  inbox and click the link to verify your account.
+                </p>
+                <Link
+                  to="/"
+                  className="inline-block w-full bg-emerald-300 text-gray-900 py-3 rounded-lg font-medium hover:bg-emerald-400 transition duration-200 shadow-md hover:shadow-lg"
+                >
+                  Back to Sign In
+                </Link>
+              </div>
+            </div>
+
+            <footer className="mt-8 text-center text-sm text-gray-500">
+              © {new Date().getFullYear()} tabily. All rights reserved.
+            </footer>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+              <p className="text-gray-600">Start planning your perfect trip</p>
+            </div>
+
+            {errors.auth && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{errors.auth}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name
+                </label>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  value={fullName}
+                  onChange={e => setFullName(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-300 focus:border-transparent outline-none transition"
+                  placeholder="John Doe"
+                />
+                {errors.fullName && <p className="mt-2 text-sm text-red-600">{errors.fullName}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="text"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-300 focus:border-transparent outline-none transition"
+                  placeholder="you@example.com"
+                />
+                {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-300 focus:border-transparent outline-none transition"
+                  placeholder="••••••••"
+                />
+                {errors.password && <p className="mt-2 text-sm text-red-600">{errors.password}</p>}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-300 focus:border-transparent outline-none transition"
+                  placeholder="••••••••"
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-2 text-sm text-red-600">{errors.confirmPassword}</p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-emerald-300 text-gray-900 py-3 rounded-lg font-medium hover:bg-emerald-400 transition duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Creating account...' : 'Create Account'}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-gray-600">
+              Already have an account?{' '}
+              <Link to="/" className="text-emerald-600 font-medium hover:text-emerald-700">
+                Sign In
+              </Link>
+            </div>
+          </div>
+
+          <footer className="mt-8 text-center text-sm text-gray-500">
+            © {new Date().getFullYear()} tabily. All rights reserved.
+          </footer>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default SignUp

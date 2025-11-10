@@ -42,6 +42,20 @@ export function useAuth() {
     return { data, error }
   }
 
+  const signUpWithEmail = async (email: string, password: string, fullName: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+        emailRedirectTo: `${window.location.origin}/`,
+      },
+    })
+    return { data, error }
+  }
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     return { error }
@@ -52,6 +66,7 @@ export function useAuth() {
     loading,
     signInWithEmail,
     signInWithGoogle,
+    signUpWithEmail,
     signOut,
   }
 }

@@ -1,4 +1,5 @@
 import { useState, FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import Header from './Header'
 
@@ -148,9 +149,9 @@ function Login() {
 
             <div className="mt-6 text-center text-sm text-gray-600">
               Don't have an account?{' '}
-              <a href="/signup" className="text-emerald-600 font-medium hover:text-emerald-700">
+              <Link to="/signup" className="text-emerald-600 font-medium hover:text-emerald-700">
                 Sign Up
-              </a>
+              </Link>
             </div>
           </div>
 
