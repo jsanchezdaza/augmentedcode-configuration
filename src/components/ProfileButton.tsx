@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import UserIcon from './icons/UserIcon'
 
@@ -7,6 +8,7 @@ interface ProfileButtonProps {
 }
 
 function ProfileButton({ user, onClick }: ProfileButtonProps) {
+  const [imageError, setImageError] = useState(false)
   const avatarUrl = user.user_metadata?.avatar_url
   const fullName = user.user_metadata?.full_name
 
@@ -14,16 +16,16 @@ function ProfileButton({ user, onClick }: ProfileButtonProps) {
     <button
       onClick={onClick}
       aria-label="Profile menu"
-      className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-300 hover:bg-emerald-400 transition-colors overflow-hidden"
+      className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-300 hover:bg-emerald-400 transition-colors overflow-hidden relative"
     >
-      {avatarUrl ? (
+      <UserIcon />
+      {avatarUrl && !imageError && (
         <img
           src={avatarUrl}
           alt={`${fullName || 'User'}'s profile picture`}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover absolute inset-0"
+          onError={() => setImageError(true)}
         />
-      ) : (
-        <UserIcon />
       )}
     </button>
   )

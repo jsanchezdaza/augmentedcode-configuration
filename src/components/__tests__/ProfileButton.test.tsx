@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ProfileButton from '../ProfileButton'
 import { User } from '@supabase/supabase-js'
@@ -70,5 +70,41 @@ describe('ProfileButton', () => {
     await userEvent.click(button)
 
     expect(onClick).toHaveBeenCalledTimes(1)
+  })
+
+  it('falls back to UserIcon when image fails to load', async () => {
+    const avatarUrl = 'https://example.com/broken-avatar.jpg'
+    const user = createMockUser('John Doe', avatarUrl)
+    const onClick = vi.fn()
+
+    render(<ProfileButton user={user} onClick={onClick} />)
+
+    const button = screen.getByRole('button', { name: /profile menu/i })
+    const img = button.querySelector('img')
+
+    expect(img).toBeInTheDocument()
+
+    img?.dispatchEvent(new Event('error', { bubbles: true }))
+
+    await waitFor(() => {
+      const imgAfterError = button.querySelector('img')
+      expect(imgAfterError).not.toBeInTheDocument()
+    })
+
+    const svg = button.querySelector('svg')
+    expect(svg).toBeInTheDocument()
+  })
+
+  it('shows UserIcon as background while image is loading', () => {
+    const avatarUrl = 'https://example.com/avatar.jpg'
+    const user = createMockUser('John Doe', avatarUrl)
+    const onClick = vi.fn()
+
+    render(<ProfileButton user={user} onClick={onClick} />)
+
+    const button = screen.getByRole('button', { name: /profile menu/i })
+    const svg = button.querySelector('svg')
+
+    expect(svg).toBeInTheDocument()
   })
 })
