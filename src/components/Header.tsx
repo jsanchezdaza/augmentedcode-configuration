@@ -79,9 +79,9 @@ function Header() {
             ) : (
               <a
                 href="/"
-                className="text-gray-300 hover:text-emerald-300 transition-colors font-medium"
+                className="bg-emerald-300 hover:bg-emerald-400 text-gray-900 px-6 py-2 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg"
               >
-                Login
+                Sign In
               </a>
             )}
           </nav>

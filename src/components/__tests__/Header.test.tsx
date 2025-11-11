@@ -118,4 +118,24 @@ describe('Header', () => {
     expect(profileImage).not.toBeInTheDocument()
     expect(userIcon).toBeInTheDocument()
   })
+
+  it('displays sign in button with green button styling when user is not authenticated', () => {
+    vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
+      user: null,
+      loading: false,
+      signInWithEmail: vi.fn(),
+      signInWithGoogle: vi.fn(),
+      signUpWithEmail: vi.fn(),
+      signOut: vi.fn(),
+    })
+    renderHeader()
+
+    const signInLink = screen.getByRole('link', { name: /sign in/i })
+    expect(signInLink).toBeInTheDocument()
+    expect(signInLink).toHaveClass('bg-emerald-300')
+    expect(signInLink).toHaveClass('hover:bg-emerald-400')
+    expect(signInLink).toHaveClass('px-6')
+    expect(signInLink).toHaveClass('py-2')
+    expect(signInLink).toHaveClass('rounded-lg')
+  })
 })
