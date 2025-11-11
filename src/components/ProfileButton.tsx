@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, memo } from 'react'
 import { User } from '@supabase/supabase-js'
 import UserIcon from './icons/UserIcon'
 
@@ -7,7 +7,7 @@ interface ProfileButtonProps {
   onClick: () => void
 }
 
-function ProfileButton({ user, onClick }: ProfileButtonProps) {
+const ProfileButton = memo(function ProfileButton({ user, onClick }: ProfileButtonProps) {
   const [imageError, setImageError] = useState(false)
   const avatarUrl = user.user_metadata?.avatar_url
   const fullName = user.user_metadata?.full_name
@@ -29,6 +29,6 @@ function ProfileButton({ user, onClick }: ProfileButtonProps) {
       )}
     </button>
   )
-}
+})
 
 export default ProfileButton

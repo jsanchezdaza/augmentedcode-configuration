@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import Logo from './icons/Logo'
 import LogoutIcon from './icons/LogoutIcon'
@@ -8,6 +8,10 @@ function Header() {
   const { user, signOut } = useAuth()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const handleProfileClick = useCallback(() => {
+    setIsDropdownOpen(prev => !prev)
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -45,7 +49,7 @@ function Header() {
             )}
             {user ? (
               <div className="relative" ref={dropdownRef}>
-                <ProfileButton user={user} onClick={() => setIsDropdownOpen(!isDropdownOpen)} />
+                <ProfileButton user={user} onClick={handleProfileClick} />
 
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-3 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50 animate-fadeIn">
