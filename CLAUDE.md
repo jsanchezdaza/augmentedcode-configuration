@@ -11,7 +11,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Commands: `pnpm install`, `pnpm dev`, `pnpm build`
 - Lock file: `pnpm-lock.yaml`
 
-## Git Commit Guidelines
+## Git Workflow
+
+### Starting a New Task (MANDATORY)
+
+**ALWAYS start from a clean main branch:**
+
+1. Checkout to main: `git checkout main`
+2. Pull latest changes: `git pull origin main`
+3. Create a new feature branch: `git checkout -b feat/feature-name`
+
+This ensures you're working with the latest code and prevents merge conflicts.
+
+### Commit Guidelines
 
 **NO CO-AUTHOR references** - Never add "Co-authored-by: Claude" or similar
 
