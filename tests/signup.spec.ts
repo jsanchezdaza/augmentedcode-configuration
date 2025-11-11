@@ -103,7 +103,10 @@ test.describe('Sign Up Page', () => {
     await expect(page.locator('text=Already have an account?')).toBeVisible()
     await expect(page.getByRole('link', { name: /sign in/i }).last()).toBeVisible()
 
-    await page.getByRole('link', { name: /sign in/i }).last().click()
+    await page
+      .getByRole('link', { name: /sign in/i })
+      .last()
+      .click()
 
     await expect(page).toHaveURL(/.*login/)
   })
