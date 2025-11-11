@@ -5,6 +5,19 @@ import { BrowserRouter } from 'react-router-dom'
 import Header from '../Header'
 import * as useAuthModule from '../../hooks/useAuth'
 
+vi.mock('../../lib/supabase', () => ({
+  supabase: {
+    auth: {
+      getSession: vi.fn(),
+      onAuthStateChange: vi.fn(),
+      signInWithPassword: vi.fn(),
+      signInWithOAuth: vi.fn(),
+      signUp: vi.fn(),
+      signOut: vi.fn(),
+    },
+  },
+}))
+
 vi.mock('../../hooks/useAuth')
 
 const createMockUser = (fullName?: string, avatarUrl?: string) => ({
