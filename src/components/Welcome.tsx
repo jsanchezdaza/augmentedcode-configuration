@@ -38,7 +38,7 @@ function Welcome() {
                 <img
                   src="/tabily-home.png"
                   alt="World landmarks illustration"
-                  className="relative w-full h-auto drop-shadow-2xl rounded-2xl lg:rounded-l-2xl lg:rounded-r-none"
+                  className="relative w-full h-auto max-h-[350px] lg:max-h-[400px] object-cover drop-shadow-2xl rounded-2xl lg:rounded-l-2xl lg:rounded-r-none"
                 />
               </div>
             </div>
